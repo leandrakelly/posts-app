@@ -25,7 +25,8 @@ jobs:
         run: yarn install
 
       - name: Lint server
-        run: yarn lint --prefix server
+        run: yarn --cwd server lint
 
       - name: Test server
-        run: yarn test --prefix server
+        run: yarn --cwd server test
+
