@@ -1,0 +1,9 @@
+{
+  "name": "graphql-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "husky": "^8.0.3"
+  }
+}
