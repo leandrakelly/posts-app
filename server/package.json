@@ -32,19 +32,19 @@
     "ts-node": "^10.9.1"
   },
   "scripts": {
-  "build": "tsc -p .",
-  "start": "node ./dist/index.ts",
-  "dev": "nodemon ./src/index.ts",
-  "docker:start": "docker-compose up -d",
-  "docker:stop": "docker-compose down",
-  "test": "jest --watch",
-  "test:coverage": "jest --coverage",
-  "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-  "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-  "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
-  "precommit": "lint-staged",
-  "prepush": "yarn test",
-  "prisma:migrate": "prisma migrate dev",
-  "prisma:migrate-deploy": "prisma migrate deploy"
-}
+    "build": "tsc -p .",
+    "start": "node ./dist/index.ts",
+    "dev": "nodemon ./src/index.ts",
+    "docker:start": "docker-compose up -d",
+    "docker:stop": "docker-compose down",
+    "test": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "precommit": "lint-staged",
+    "prepush": "yarn test",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate-deploy": "prisma migrate deploy"
+  }
 }

@@ -1,10 +1,11 @@
 import { GraphQLList } from 'graphql';
 import { UserType } from '../TypeDefs/User';
+import { PrismaClient } from '@prisma/client';
 
-// get all users using prisma
+const prisma = new PrismaClient();
 export const GET_USERS = {
   type: new GraphQLList(UserType),
   resolve(): any {
-    return [];
+    return prisma.user.findMany();
   },
 };
