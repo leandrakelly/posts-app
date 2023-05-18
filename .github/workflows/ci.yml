@@ -21,12 +21,14 @@ jobs:
         with:
           node-version: 14
 
-      - name: Install dependencies
+      - name: Install root dependencies
         run: yarn install
+
+      - name: Install server dependencies
+        run: yarn --cwd server install
 
       - name: Lint server
         run: yarn --cwd server lint
 
       - name: Test server
         run: yarn --cwd server test
-
