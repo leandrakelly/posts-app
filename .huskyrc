@@ -1,6 +1,0 @@
-{
-    "hooks": {
-      "pre-commit": "cd server && yarn precommit",
-      "pre-push": "cd server && yarn prepush"
-    }
-  }
