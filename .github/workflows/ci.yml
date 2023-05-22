@@ -29,3 +29,15 @@ jobs:
 
       - name: Lint server
         run: yarn --cwd server lint
+
+      - name: Test server
+        run: yarn --cwd server test
+
+      - name: Install client dependencies
+        run: yarn --cwd client install
+
+      - name: Lint client
+        run: yarn --cwd client lint
+
+      - name: Test client
+        run: yarn --cwd client test
