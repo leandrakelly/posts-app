@@ -1,0 +1,83 @@
+schema {
+  query: RootQueryType
+  mutation: Mutation
+}
+
+"""
+Exposes a URL that specifies the behavior of this scalar.
+"""
+directive @specifiedBy(
+  """
+  The URL that specifies the behavior of this scalar.
+  """
+  url: String!
+) on SCALAR
+
+type CreatePostResponse {
+  post: Post
+}
+
+type CreateUserResponse {
+  user: User
+  token: String
+}
+
+type DeletePostResponse {
+  post: Post
+}
+
+type EditPostResponse {
+  post: Post
+}
+
+type LoginResponse {
+  user: User
+  token: String
+}
+
+type Mutation {
+  createUser(
+    name: String
+    email: String!
+    password: String!
+  ): CreateUserResponse
+  login(email: String!, password: String!): LoginResponse
+  createPost(
+    title: String!
+    content: String
+    authorId: String!
+  ): CreatePostResponse
+  editPost(postId: String!, title: String, content: String): EditPostResponse
+  deletePost(postId: String!): DeletePostResponse
+}
+
+type Post {
+  id: String
+  title: String
+  content: String
+  createdAt: String
+  updatedAt: String
+  authorId: String
+  author: PostAuthor
+}
+
+type PostAuthor {
+  name: String
+}
+
+type RootQueryType {
+  getUsers: [User]
+  getUser(id: String!): User
+  getPost(id: String!): Post
+  getPosts: [Post]
+}
+
+type User {
+  id: String
+  email: String
+  password: String
+  name: String
+  createdAt: String
+  updatedAt: String
+  posts: [Post]
+}
