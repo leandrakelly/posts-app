@@ -9,6 +9,6 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "strictPropertyInitialization": true,
-  },
+    "strictPropertyInitialization": true
+  }
 }
