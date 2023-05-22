@@ -1,0 +1,26 @@
+.scroll-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-image: linear-gradient(to right, #ff6f7d, #ab48e4);
+  color: white;
+  border: none;
+  width: 45px !important;
+  height: 45px !important;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 0;
+}
+
+.scroll-to-top:hover {
+  color: white !important;
+}
+
+.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
