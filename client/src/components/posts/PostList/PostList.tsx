@@ -32,7 +32,7 @@ export const PostList = ({ refreshPosts }: { refreshPosts: boolean }) => {
           .map((post: Post) => <PostItem key={post.id} post={post} />)
           .reverse()
       ) : (
-        <div>No posts available.</div>
+        <div className="no-available">No posts available.</div>
       )}
     </div>
   );
