@@ -11,34 +11,35 @@ describe('Api TEST', () => {
   const prisma = new PrismaClient();
 
   beforeAll(async () => {
+    await prisma.post.deleteMany();
+    await prisma.user.deleteMany();
+
     app = createTestApp();
     server = app.listen(port, () => {
       console.log(`Server started on port ${port}`);
     });
-
-    await prisma.post.deleteMany();
-    await prisma.user.deleteMany();
   });
 
   afterAll((done) => {
+    prisma.$disconnect();
     server.close(done);
     console.log('Server stopped');
   });
 
-  let createdUserId: string;
+  const createdUserId: { [key: string]: string } = {};
+  const createdToken: { [key: string]: string } = {};
   let createdPostId: string;
-  let createdToken: string;
 
-  it('should register a user', async () => {
+  it.each(['test', 'test2'])('should register a user', async (name) => {
     const res = await request(app)
       .post('/graphql')
       .send({
         query: `
           mutation {
             createUser(
-              name: "test",
-              email: "test@gmail.com",
-              password: "test"
+              name: "${name}",
+              email: "${name}@gmail.com",
+              password: "${name}"
             ) {
             user{
                 id
@@ -53,11 +54,11 @@ describe('Api TEST', () => {
       .set('Content-Type', 'application/json')
       .expect('Content-Type', /json/);
 
-    createdUserId = res.body.data.createUser.user.id;
-    createdToken = `Bearer ${res.body.data.createUser.token}`;
+    createdUserId[name] = res.body.data.createUser.user.id;
+    createdToken[name] = `Bearer ${res.body.data.createUser.token}`;
 
-    expect(res.body.data.createUser.user.name).toBe('test');
-    expect(res.body.data.createUser.user.email).toBe('test@gmail.com');
+    expect(res.body.data.createUser.user.name).toBe(name);
+    expect(res.body.data.createUser.user.email).toBe(`${name}@gmail.com`);
     expect(res.body.data.createUser.token).not.toBeNull();
   });
 
@@ -213,14 +214,19 @@ describe('Api TEST', () => {
         `,
       })
       .set('Content-Type', 'application/json')
-      .set('Authorization', createdToken)
+      .set('Authorization', createdToken.test)
       .expect('Content-Type', /json/);
 
-    expect(res.body.data.getUsers.length).toBe(1);
+    expect(res.body.data.getUsers.length).toBe(2);
+
     expect(res.body.data.getUsers[0].name).toBe('test');
     expect(res.body.data.getUsers[0].email).toBe('test@gmail.com');
 
+    expect(res.body.data.getUsers[1].name).toBe('test2');
+    expect(res.body.data.getUsers[1].email).toBe('test2@gmail.com');
+
     expect(res.body.data.getUsers[0].posts.length).toBe(0);
+    expect(res.body.data.getUsers[1].posts.length).toBe(0);
   });
 
   it('should get a user', async () => {
@@ -229,7 +235,7 @@ describe('Api TEST', () => {
       .send({
         query: `
         query {
-            getUser(id: "${createdUserId}") {
+            getUser(id: "${createdUserId.test}") {
                 id
                 name
                 email
@@ -243,7 +249,7 @@ describe('Api TEST', () => {
         `,
       })
       .set('Content-Type', 'application/json')
-      .set('Authorization', createdToken)
+      .set('Authorization', createdToken.test)
       .expect('Content-Type', /json/);
 
     expect(res.body.data.getUser.name).toBe('test');
@@ -271,7 +277,7 @@ describe('Api TEST', () => {
         `,
       })
       .set('Content-Type', 'application/json')
-      .set('Authorization', createdToken)
+      .set('Authorization', createdToken.test)
       .expect('Content-Type', /json/);
 
     expect(res.body.errors[0].message).toBe('User not found');
@@ -298,7 +304,7 @@ describe('Api TEST', () => {
             `,
       })
       .set('Content-Type', 'application/json')
-      .set('Authorization', createdToken)
+      .set('Authorization', createdToken.test)
       .expect('Content-Type', /json/);
 
     expect(res.body.errors[0].message).toBe('Author not found');
@@ -325,7 +331,7 @@ describe('Api TEST', () => {
             `,
       })
       .set('Content-Type', 'application/json')
-      .set('Authorization', createdToken)
+      .set('Authorization', createdToken.test)
       .expect('Content-Type', /json/);
 
     expect(res.body.errors[0].message).toBe('Title and author ID are required');
@@ -352,7 +358,7 @@ describe('Api TEST', () => {
             `,
       })
       .set('Content-Type', 'application/json')
-      .set('Authorization', createdToken)
+      .set('Authorization', createdToken.test)
       .expect('Content-Type', /json/);
 
     expect(res.body.errors[0].message).toBe('Title and author ID are required');
@@ -367,7 +373,7 @@ describe('Api TEST', () => {
             createPost(
               title: "test",
               content: "test"
-              authorId: "${createdUserId}"
+              authorId: "${createdUserId.test}"
             ) {
             post{
                 id
@@ -379,7 +385,7 @@ describe('Api TEST', () => {
         `,
       })
       .set('Content-Type', 'application/json')
-      .set('Authorization', createdToken)
+      .set('Authorization', createdToken.test)
       .expect('Content-Type', /json/);
 
     createdPostId = res.body.data.createPost.post.id;
@@ -405,7 +411,7 @@ describe('Api TEST', () => {
         `,
       })
       .set('Content-Type', 'application/json')
-      .set('Authorization', createdToken)
+      .set('Authorization', createdToken.test)
       .expect('Content-Type', /json/);
 
     expect(res.body.data.getPosts.length).toBe(1);
@@ -431,7 +437,7 @@ describe('Api TEST', () => {
         `,
       })
       .set('Content-Type', 'application/json')
-      .set('Authorization', createdToken)
+      .set('Authorization', createdToken.test)
       .expect('Content-Type', /json/);
 
     expect(res.body.data.getPost.title).toBe('test');
@@ -459,7 +465,7 @@ describe('Api TEST', () => {
         `,
       })
       .set('Content-Type', 'application/json')
-      .set('Authorization', createdToken)
+      .set('Authorization', createdToken.test)
       .expect('Content-Type', /json/);
 
     expect(res.body.errors[0].message).toBe('Post not found');
@@ -486,13 +492,13 @@ describe('Api TEST', () => {
         `,
       })
       .set('Content-Type', 'application/json')
-      .set('userId', createdUserId)
-      .set('Authorization', createdToken)
+      .set('userId', createdUserId.test)
+      .set('Authorization', createdToken.test)
       .expect('Content-Type', /json/);
 
     expect(res.body.data.editPost.post.title).toBe('test2');
     expect(res.body.data.editPost.post.content).toBe('test2');
-    expect(res.body.data.editPost.post.authorId).toBe(createdUserId);
+    expect(res.body.data.editPost.post.authorId).toBe(createdUserId.test);
   });
 
   it('should not update a post if userId is wrong', async () => {
@@ -515,8 +521,7 @@ describe('Api TEST', () => {
             `,
       })
       .set('Content-Type', 'application/json')
-      .set({ userId: 'wrongId' })
-      .set('Authorization', createdToken)
+      .set('Authorization', createdToken.test2)
       .expect('Content-Type', /json/);
 
     expect(res.body.errors[0].message).toBe(
@@ -545,7 +550,7 @@ describe('Api TEST', () => {
       })
       .set('Content-Type', 'application/json')
       .set({ userId: createdUserId })
-      .set('Authorization', createdToken)
+      .set('Authorization', createdToken.test)
       .expect('Content-Type', /json/);
 
     expect(res.body.errors[0].message).toBe('Post not found');
@@ -572,7 +577,7 @@ describe('Api TEST', () => {
       })
       .set('Content-Type', 'application/json')
       .set({ userId: createdUserId })
-      .set('Authorization', createdToken)
+      .set('Authorization', createdToken.test)
       .expect('Content-Type', /json/);
 
     expect(res.body.errors[0].message).toBe(
@@ -580,7 +585,7 @@ describe('Api TEST', () => {
     );
   });
 
-  it('should not delete a post if userId is wrong', async () => {
+  it('should not delete a post of another user', async () => {
     const res = await request(app)
       .post('/graphql')
       .send({
@@ -598,8 +603,7 @@ describe('Api TEST', () => {
                 `,
       })
       .set('Content-Type', 'application/json')
-      .set({ userId: 'wrongId' })
-      .set('Authorization', createdToken)
+      .set('Authorization', createdToken.test2)
       .expect('Content-Type', /json/);
 
     expect(res.body.errors[0].message).toBe(
@@ -626,7 +630,7 @@ describe('Api TEST', () => {
       })
       .set('Content-Type', 'application/json')
       .set({ userId: createdUserId })
-      .set('Authorization', createdToken)
+      .set('Authorization', createdToken.test)
       .expect('Content-Type', /json/);
 
     expect(res.body.errors[0].message).toBe('Post not found');
@@ -651,8 +655,8 @@ describe('Api TEST', () => {
         `,
       })
       .set('Content-Type', 'application/json')
-      .set('userId', createdUserId)
-      .set('Authorization', createdToken)
+      .set('userId', createdUserId.test)
+      .set('Authorization', createdToken.test)
       .expect('Content-Type', /json/);
   });
 
@@ -673,7 +677,7 @@ describe('Api TEST', () => {
         `,
       })
       .set('Content-Type', 'application/json')
-      .set('Authorization', createdToken)
+      .set('Authorization', createdToken.test)
       .expect('Content-Type', /json/);
 
     expect(res.body.data.getPosts.length).toBe(0);
