@@ -72,6 +72,7 @@ export const Login = () => {
         <Form.Item>
           <Button
             type="primary"
+            data-testid="login-button"
             htmlType="submit"
             className="auth-form-button"
             loading={isInFlight}
