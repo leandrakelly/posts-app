@@ -20,5 +20,3 @@ services:
       POSTGRES_DB: testdb
     ports:
       - '5433:5432'
-    volumes:
-      - ./testdata:/var/lib/postgresql/data
