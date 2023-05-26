@@ -46,7 +46,6 @@
     "docker:start-testdb": "docker-compose up -d testdb",
     "docker:stop-db": "docker-compose stop db",
     "docker:stop-testdb": "docker-compose stop testdb",
-    "wait-for-db": "ts-node ./src/wait-for-db.ts",
     "test": "yarn docker:start-testdb && dotenv -e .env.test yarn prisma:migrate && jest --watchAll --no-cache",
     "test:ci": "yarn docker:start-testdb && yarn prisma:migrate && jest --no-cache",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
