@@ -637,7 +637,7 @@ describe('Api TEST', () => {
   });
 
   it('should delete a post', async () => {
-    const res = await request(app)
+    await request(app)
       .post('/graphql')
       .send({
         query: `
