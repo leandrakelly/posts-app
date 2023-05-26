@@ -1,6 +1,6 @@
 # Posts-app
 
-![gif](https://github.com/leandrakelly/affiliated-apps/blob/main/chrome-capture-2023-4-17.gif) ////
+![gif](https://github.com/leandrakelly/posts-app/blob/main/app%20demonstration.gif)
 
 This repository contains the frontend and backend applications for a Posts App crud project challenge.
 The frontend is built using React and TypeScript with PostreSQL as database, while the backend is built using Express, Graphql with Typescript and Prisma. Together, these applications provide a seamless user experience.
